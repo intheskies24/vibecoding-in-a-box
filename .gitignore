@@ -1,0 +1,26 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+
+# Template node_modules (each template installs its own)
+templates/*/node_modules/
+templates/*/.next/
+templates/*/dist/
+templates/*/.env
+templates/*/.env.local
+
+# Flutter build artifacts
+templates/*/build/
+templates/*/.dart_tool/
+templates/*/.flutter-plugins
+templates/*/.flutter-plugins-dependencies
+
+# Test scaffolds created locally
+test-tool/
+
+# Claude
+.claude/
