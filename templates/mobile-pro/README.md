@@ -65,11 +65,20 @@ cp .env.example .env
 # Fill in SUPABASE_URL, SUPABASE_ANON_KEY, and ANTHROPIC_API_KEY
 ```
 
-### 5. Run
+### 5. Install dependencies and run
 
 ```bash
 flutter pub get
-flutter run
+```
+
+**No phone or simulator? Run on macOS desktop:**
+```bash
+flutter run -d macos
+```
+
+**iOS Simulator:**
+```bash
+open -a Simulator && flutter run
 ```
 
 ---

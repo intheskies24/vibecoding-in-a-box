@@ -149,7 +149,7 @@ if [[ "$CONFIG" == "mobile" || "$CONFIG" == "mobile-pro" ]]; then
   flutter create \
     --org com.vibecoding \
     --project-name "$DART_NAME" \
-    --platforms ios,android \
+    --platforms ios,android,macos \
     "$DEST" \
     > /dev/null 2>&1
 
@@ -244,7 +244,12 @@ case "$CONFIG" in
     fi
     echo "  # Run supabase/migrations/001_tasks.sql in your Supabase SQL editor"
     echo "  flutter pub get"
-    echo "  flutter run"
+    echo ""
+    echo -e "  ${CYAN}Run on macOS desktop (no device needed):${RESET}"
+    echo "  flutter run -d macos"
+    echo ""
+    echo -e "  ${CYAN}Run on iOS Simulator:${RESET}"
+    echo "  open -a Simulator && flutter run"
     echo ""
     echo -e "  ${CYAN}See README.md for the full setup guide.${RESET}"
     ;;

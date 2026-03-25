@@ -76,16 +76,32 @@ You don't need Android Studio to run on a simulator, but you do need it for Andr
 
 ---
 
-## Step 3 — Set up a Simulator or Device
+## Step 3 — Run on a Device
+
+### macOS Desktop (no phone or simulator needed)
+
+vibecoding-in-a-box scaffolds Flutter projects with macOS desktop support included. This is the fastest way to test on your Mac — no device, no simulator, no Xcode required.
+
+```bash
+flutter run -d macos
+```
+
+A native macOS window opens with your app. Hot reload works exactly as it does on mobile.
 
 ### iOS Simulator (macOS only)
 
 ```bash
-# Open the simulator
+# Open the Simulator app
 open -a Simulator
 
-# Or use the Simulator app from Xcode
-# Xcode → Window → Devices and Simulators
+# Flutter auto-detects it
+flutter run
+```
+
+If you have multiple simulators, pick one:
+```bash
+flutter devices           # list available simulators
+flutter run -d <id>       # run on a specific one
 ```
 
 ### Android Emulator
@@ -94,6 +110,7 @@ open -a Simulator
 2. Go to **Virtual Device Manager** (from the Tools menu)
 3. Create a virtual device — Pixel 8 with the latest API is a safe default
 4. Click the ▶ Play button to start it
+5. Run `flutter run` — it will auto-detect the running emulator
 
 ### Physical device
 

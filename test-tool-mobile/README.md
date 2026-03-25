@@ -67,24 +67,10 @@ cp .env.example .env
 
 ```bash
 flutter pub get
+flutter run
 ```
 
-**No phone or simulator? Run on macOS desktop:**
-```bash
-flutter run -d macos
-```
-
-**iOS Simulator (macOS only):**
-```bash
-open -a Simulator   # launch the Simulator app first
-flutter run          # Flutter auto-detects it
-```
-
-**Physical device or Android emulator:**
-```bash
-flutter devices      # list available devices
-flutter run -d <id>  # run on a specific one
-```
+Select your simulator or device from the menu. The task manager app will launch.
 
 ---
 

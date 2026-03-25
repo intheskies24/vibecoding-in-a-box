@@ -1,0 +1,31 @@
+name: test_tool_mobile
+description: A Flutter app built with vibecoding-in-a-box.
+publish_to: none
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Supabase — database, auth, storage
+  supabase_flutter: ^2.8.0
+
+  # Environment variables
+  flutter_dotenv: ^5.2.1
+
+  # UI
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - .env
