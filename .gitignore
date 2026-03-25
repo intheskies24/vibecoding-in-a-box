@@ -21,6 +21,7 @@ templates/*/.flutter-plugins-dependencies
 
 # Test scaffolds created locally
 test-tool/
+test-tool-*/
 
 # Claude
 .claude/
