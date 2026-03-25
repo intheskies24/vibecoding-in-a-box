@@ -64,21 +64,28 @@ For local-only tools, localStorage-persisted Zustand is all the "database" you n
 
 ## Authentication
 
-### Clerk
-**Used in:** `standard`, `pro`
+### Supabase Auth
+**Used in:** `standard`, `mobile`, `mobile-pro`
 
-Clerk is the fastest way to add production-quality auth to a Next.js app. It handles email/password, OAuth (Google, GitHub, etc.), magic links, MFA, and user management — all with zero backend code.
+Supabase Auth is built into Supabase — no additional service to sign up for. It handles email/password sign-up with email confirmation, session management via cookies (`@supabase/ssr`), and Row Level Security via `auth.uid()`.
+
+For the `standard` template this means one free service covers both your database and auth. The tradeoff is a slightly simpler auth surface (no built-in OAuth UI, MFA, or user management dashboard out of the box).
+
+**Implementation in `standard`:**
+- Server actions in `app/actions/auth.ts` for `signIn`, `signUp`, `signOut`
+- Email confirmation flow via `app/auth/callback/route.ts`
+- Middleware refreshes the session cookie on every request using `@supabase/ssr`
+- RLS policies use `auth.uid()` to scope data per user
+
+### Clerk
+**Used in:** `pro`
+
+Clerk is the fastest way to add production-quality auth with richer features: OAuth (Google, GitHub, etc.), magic links, MFA, and a hosted user management dashboard — all with zero backend code.
+
+Choose `pro` over `standard` when you need social login, MFA, or a hosted user admin panel.
 
 **Why not NextAuth / Auth.js?**
-NextAuth requires more configuration and you manage the session logic. Clerk works out of the box with a few environment variables. For vibecoding, fewer decisions = faster building.
-
-**Why not Supabase Auth?**
-Supabase Auth is great (and used in the mobile templates). For web apps using Clerk, we keep Supabase as the database only and let Clerk own identity. The Clerk user ID (`userId`) is stored in Supabase rows to scope data per user.
-
-### Supabase Auth
-**Used in:** `mobile`, `mobile-pro`
-
-For Flutter apps, Supabase Auth is the natural choice — it integrates directly with the Supabase Flutter SDK and works with RLS policies via `auth.uid()`.
+NextAuth requires more configuration and you manage the session logic yourself. For vibecoding, fewer decisions = faster building.
 
 ---
 

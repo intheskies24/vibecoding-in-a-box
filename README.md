@@ -47,7 +47,7 @@ chmod +x scripts/scaffold.sh
 |--------|----------|-------|
 | `nano` | Local personal tool, no server needed | Vite + React + Zustand |
 | `micro` | Simple hosted web app, no DB | Next.js + Vercel |
-| `standard` | Full-stack web app with auth + DB | Next.js + Supabase + Clerk + Vercel |
+| `standard` | Full-stack web app with auth + DB | Next.js + Supabase Auth + Supabase + Vercel |
 | `pro` | AI-powered full-stack app | Next.js + Supabase + Clerk + Claude SDK + Vercel AI SDK |
 | `mobile` | Cross-platform iOS/Android | Flutter + Supabase |
 | `mobile-pro` | AI-powered mobile app | Flutter + Supabase + Claude SDK |
@@ -81,7 +81,8 @@ Every template ships with:
 
 ### Backend & Data
 - **Supabase** — Postgres DB + Auth + Storage + Realtime
-- **Clerk** — User auth and management (web default)
+- **Supabase Auth** — Built-in auth for `standard` (email/password + email confirmation)
+- **Clerk** — User auth and management (`pro` only — richer auth DX)
 - **Zustand** — Local state with localStorage persistence (`nano`)
 
 ### AI
@@ -105,11 +106,11 @@ vibecoding-in-a-box/
 │
 ├── templates/
 │   ├── nano/                  # Vite + React + Zustand
-│   ├── micro/                 # Next.js (coming soon)
-│   ├── standard/              # Next.js + Supabase + Clerk
-│   ├── pro/                   # Next.js + Supabase + Clerk + Claude SDK (coming soon)
-│   ├── mobile/                # Flutter + Supabase (coming soon)
-│   └── mobile-pro/            # Flutter + Supabase + Claude SDK (coming soon)
+│   ├── micro/                 # Next.js + Vercel
+│   ├── standard/              # Next.js + Supabase Auth + Supabase + Vercel
+│   ├── pro/                   # Next.js + Supabase + Clerk + Claude SDK + Vercel
+│   ├── mobile/                # Flutter + Supabase
+│   └── mobile-pro/            # Flutter + Supabase + Claude SDK
 │
 ├── wizard/
 │   ├── questions.md           # Setup questions (AI-readable)
@@ -132,7 +133,7 @@ vibecoding-in-a-box/
 
 ## Contributing
 
-See `docs/contributing.md` (coming soon). To contribute a new template or config, open an issue first to discuss the stack — we want to keep the decision logic clean.
+See `docs/contributing.md`. To contribute a new template or config, open an issue first to discuss the stack — we want to keep the decision logic clean.
 
 ---
 

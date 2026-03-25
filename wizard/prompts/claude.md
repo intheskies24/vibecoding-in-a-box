@@ -28,23 +28,52 @@ Walk the user through:
 Walk the user through:
 
 1. `cd` into their new project directory
-2. Set up Supabase:
-   - Create a project at supabase.com
-   - Copy the project URL and anon key
-   - Run the migration: paste `supabase/migrations/001_tasks.sql` into the Supabase SQL editor
-3. Set up Clerk:
-   - Create an app at clerk.com
-   - Copy the publishable key and secret key
-4. Copy `.env.example` to `.env.local` and fill in the values
-5. `npm install`
-6. `npm run dev`
-7. Show them the task manager with auth running
+2. `npm install`
+3. Set up Supabase:
+   - Create a project at supabase.com (free tier)
+   - Go to **SQL Editor** and run `supabase/migrations/001_tasks.sql`
+   - Copy your **Project URL** and **Anon Key** from Project Settings → API
+4. Open `/configuration` in the running app and paste in the credentials — or manually copy `.env.example` to `.env.local` and fill in the values
+5. `npm run dev`
+6. Sign up at `/sign-up` — Supabase will send a confirmation email
+7. After confirming, you'll land on `/welcome` and can explore the task manager
 
 **Key files to highlight:**
+- `app/(dashboard)/welcome/page.tsx` — starting page after login
 - `app/(dashboard)/tasks/page.tsx` — main feature page
-- `lib/supabase/client.ts` and `lib/supabase/server.ts` — DB access
-- `middleware.ts` — Clerk auth protection
-- `supabase/migrations/001_tasks.sql` — DB schema
+- `app/actions/auth.ts` — signIn / signUp / signOut server actions
+- `lib/supabase/client.ts` and `lib/supabase/server.ts` — DB + Auth clients
+- `middleware.ts` — session refresh + route protection
+- `supabase/migrations/001_tasks.sql` — DB schema with RLS
+
+**Environment variables needed:**
+```
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
+
+---
+
+## After Scaffolding: `pro`
+
+Walk the user through:
+
+1. `cd` into their new project directory
+2. `npm install`
+3. Set up Supabase (same as `standard` above)
+4. Set up Clerk:
+   - Create an app at clerk.com
+   - Copy your publishable key and secret key
+5. Get an Anthropic API key at console.anthropic.com
+6. Copy `.env.example` to `.env.local` and fill in all values
+7. `npm run dev`
+
+**Key files to highlight:**
+- `app/(dashboard)/welcome/page.tsx` — starting page after login
+- `app/(dashboard)/chat/page.tsx` — AI chat page
+- `app/api/chat/route.ts` — streaming Claude endpoint
+- `components/chat.tsx` — chat UI using Vercel AI SDK `useChat` hook
 
 **Environment variables needed:**
 ```
@@ -52,23 +81,8 @@ NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
 CLERK_SECRET_KEY=
-NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
-NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
+ANTHROPIC_API_KEY=
 ```
-
----
-
-## After Scaffolding: `pro`
-
-Same as `standard`, plus:
-
-1. Get an Anthropic API key at console.anthropic.com
-2. Add to `.env.local`:
-   ```
-   ANTHROPIC_API_KEY=
-   ```
-3. Point to `app/api/chat/route.ts` — streaming AI endpoint
-4. Point to `components/chat.tsx` — chat UI using Vercel AI SDK
 
 ---
 

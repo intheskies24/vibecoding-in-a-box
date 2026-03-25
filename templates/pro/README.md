@@ -66,21 +66,27 @@ Add all environment variables from `.env.example` in the Vercel dashboard.
 ```
 app/
 ├── (auth)/
-│   ├── sign-in/       # Clerk sign-in
-│   └── sign-up/       # Clerk sign-up
+│   ├── sign-in/            # Clerk sign-in
+│   └── sign-up/            # Clerk sign-up
 ├── (dashboard)/
-│   ├── layout.tsx     # Protected layout with navbar
-│   ├── tasks/         # Task manager CRUD (reference)
-│   └── chat/          # AI chat page
+│   ├── welcome/            # Home page after login
+│   ├── tasks/              # Task manager CRUD (reference)
+│   ├── chat/               # AI chat page
+│   ├── configuration/      # Paste Supabase + Clerk + Anthropic credentials
+│   ├── getting-started/    # Setup guide
+│   └── components-demo/    # UI component examples
+├── actions/
+│   └── save-config.ts      # Writes credentials to .env.local
 ├── api/
-│   ├── tasks/         # Task REST API
-│   └── chat/          # Streaming Claude endpoint
+│   ├── tasks/              # Task REST API
+│   └── chat/               # Streaming Claude endpoint
 ├── layout.tsx
-└── page.tsx
+└── page.tsx                # Root: redirects to /welcome or /configuration
 
 components/
-├── navbar.tsx          # Nav with Tasks + Chat links
-├── chat.tsx            # Streaming chat UI (useChat hook)
+├── app-sidebar.tsx         # Dark sidebar with nav + Clerk UserButton
+├── navbar.tsx              # Top navigation bar
+├── chat.tsx                # Streaming chat UI (useChat hook)
 ├── task-form.tsx
 └── task-list.tsx
 ```

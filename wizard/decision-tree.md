@@ -41,13 +41,13 @@ Q5 (auth) == "yes" OR Q4 (database) == "yes"
 
 ### `standard`
 **Trigger:** Hosted web app with DB and/or auth, no AI
-**Stack:** Next.js + Supabase + Clerk + Vercel
-**Why:** Most common full-stack vibecoding setup. Supabase handles Postgres + Storage + Realtime. Clerk handles auth with zero backend code. Vercel handles deployment.
+**Stack:** Next.js + Supabase Auth + Supabase + Vercel
+**Why:** Most common full-stack vibecoding setup. Supabase handles Postgres + Auth + Storage + Realtime — one service for everything. Supabase Auth provides email/password sign-up with email confirmation and RLS-compatible sessions. Vercel handles deployment. No Clerk needed — fewer services to configure.
 
 ### `pro`
 **Trigger:** Hosted web app that calls an AI/LLM API
 **Stack:** Next.js + Supabase + Clerk + Anthropic Claude SDK + Vercel AI SDK + Vercel
-**Why:** Everything in `standard` plus streaming AI responses via Vercel AI SDK. Claude SDK for LLM calls. Vercel AI SDK for building chat/streaming UIs easily.
+**Why:** Everything in `standard` plus Clerk (richer auth — OAuth, MFA, user management) and streaming AI via Vercel AI SDK. Claude SDK for LLM calls. Choose `pro` over `standard` when you need social login or AI features.
 
 ### `mobile`
 **Trigger:** Mobile app (iOS/Android), no AI
@@ -68,4 +68,4 @@ Q5 (auth) == "yes" OR Q4 (database) == "yes"
 | Local + AI | `nano` | Add Claude SDK calls directly from Vite; no server needed for API calls if using client-side API key (not for production) |
 | Both web + mobile | `mobile` or `mobile-pro` | Recommend building the backend with Supabase first, then the web frontend separately using `standard` or `pro` |
 | Storage only (no DB, no auth) | `micro` | Supabase Storage can be added to micro if needed |
-| Database only (no auth) | `standard` | Supabase works fine without Clerk — skip Clerk setup in that template |
+| Database only (no auth) | `standard` | Supabase works fine without auth — simply don't add users; remove RLS policies or make them public |

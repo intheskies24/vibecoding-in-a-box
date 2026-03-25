@@ -91,7 +91,7 @@ if database == yes or auth == yes:
 |--------|----------|-------|
 | `nano` | Local personal tool | Vite + React + Zustand (localStorage persist) |
 | `micro` | Simple hosted web app | Next.js + Vercel, no DB |
-| `standard` | Full-stack web app | Next.js + Supabase + Clerk + Vercel |
+| `standard` | Full-stack web app | Next.js + Supabase Auth + Supabase + Vercel |
 | `pro` | AI-powered full-stack | Next.js + Supabase + Clerk + Claude SDK + Vercel AI SDK |
 | `mobile` | Cross-platform mobile | Flutter + Supabase |
 | `mobile-pro` | AI-powered mobile app | Flutter + Supabase + Claude SDK |

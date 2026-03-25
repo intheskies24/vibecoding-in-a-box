@@ -1,8 +1,8 @@
 # PRD: vibecoding-in-a-box
 
-**Status:** Draft
-**Version:** 0.2
-**Date:** 2026-03-24
+**Status:** Active
+**Version:** 0.3
+**Date:** 2026-03-25
 
 ---
 
@@ -88,7 +88,7 @@ Pre-defined, named combinations of technologies tuned for specific use cases.
 |--------|----------|-------|
 | `nano` | Local script or personal tool | Vite + React, no backend, SQLite (local) |
 | `micro` | Simple hosted web app | Next.js, no DB, deployed to Vercel |
-| `standard` | Full-stack web app | Next.js + Supabase + Clerk + Vercel |
+| `standard` | Full-stack web app | Next.js + Supabase Auth + Supabase + Vercel |
 | `pro` | AI-powered full-stack web app | Next.js + Supabase + Clerk + Claude SDK + Vercel AI SDK |
 | `mobile` | Cross-platform mobile app | Flutter + Supabase |
 | `mobile-pro` | AI-powered mobile app | Flutter + Supabase + Claude SDK |
@@ -133,8 +133,8 @@ Each config maps to a template directory in the repo containing:
 ### Auth
 | Technology | Role | Notes |
 |-----------|------|-------|
-| Clerk | User auth + management | Default — best DX for vibecoding |
-| Supabase Auth | Auth when already using Supabase | Reduces vendor count |
+| Supabase Auth | Auth for `standard` | Built into Supabase — zero extra services, email/password + email confirmation flow |
+| Clerk | Auth for `pro` | Best DX for complex auth (OAuth, MFA, user management) |
 | NextAuth.js | Open-source auth | When self-hosting auth is required |
 
 ### Storage
@@ -169,10 +169,10 @@ vibecoding-in-a-box/
 ├── PRD.md                     # This document
 │
 ├── templates/
-│   ├── nano/                  # Local tool (Vite + React + SQLite)
+│   ├── nano/                  # Local tool (Vite + React + Zustand)
 │   ├── micro/                 # Hosted web app (Next.js + Vercel)
-│   ├── standard/              # Full-stack (Next.js + Supabase + Clerk)
-│   ├── pro/                   # AI full-stack (Next.js + Supabase + Clerk + Claude SDK)
+│   ├── standard/              # Full-stack (Next.js + Supabase Auth + Supabase + Vercel)
+│   ├── pro/                   # AI full-stack (Next.js + Supabase + Clerk + Claude SDK + Vercel)
 │   ├── mobile/                # Mobile app (Flutter + Supabase)
 │   └── mobile-pro/            # AI mobile app (Flutter + Supabase + Claude SDK)
 │
@@ -211,24 +211,24 @@ vibecoding-in-a-box/
 ## Phased Roadmap
 
 ### Phase 1 — Foundation (MVP)
-- [ ] `CLAUDE.md` with AI setup wizard prompt
-- [ ] `README.md` with project overview and quick start
-- [ ] `wizard/` directory with questions and decision tree
-- [ ] `standard` template (Next.js + Supabase + Clerk + Vercel) — includes task manager CRUD example
-- [ ] `nano` template (Vite + React + SQLite) — includes task manager CRUD example
-- [ ] `scripts/setup.sh` interactive CLI wizard
-- [ ] `scripts/scaffold.sh` non-interactive scaffolding shortcut
+- [x] `CLAUDE.md` with AI setup wizard prompt
+- [x] `README.md` with project overview and quick start
+- [x] `wizard/` directory with questions and decision tree
+- [x] `standard` template (Next.js + Supabase Auth + Supabase + Vercel) — includes task manager CRUD example
+- [x] `nano` template (Vite + React + Zustand) — includes task manager CRUD example
+- [x] `scripts/setup.sh` interactive CLI wizard
+- [x] `scripts/scaffold.sh` non-interactive scaffolding shortcut
 
 ### Phase 2 — Full Config Coverage
-- [ ] `micro` template
-- [ ] `pro` template (adds Claude SDK to `standard`)
-- [ ] `mobile` template (Flutter + Supabase)
-- [ ] `mobile-pro` template
+- [x] `micro` template
+- [x] `pro` template (Next.js + Supabase + Clerk + Claude SDK + Vercel AI SDK)
+- [x] `mobile` template (Flutter + Supabase)
+- [x] `mobile-pro` template (Flutter + Supabase + Claude SDK)
 
 ### Phase 3 — Polish & Community
-- [ ] Wizard prompts for Cursor, Windsurf, and Copilot
-- [ ] `docs/stack-guide.md` and `docs/deployment.md`
-- [ ] `CONTRIBUTING.md` for community submissions
+- [x] Wizard prompts for Cursor, Windsurf, and Copilot
+- [x] `docs/stack-guide.md` and `docs/deployment.md`
+- [x] `CONTRIBUTING.md` for community submissions
 - [ ] GitHub Actions for template validation (lint, build checks)
 - [ ] Public launch (Product Hunt, X/Twitter, Hacker News)
 

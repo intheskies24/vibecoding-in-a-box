@@ -39,9 +39,9 @@ In the Vercel dashboard → **Settings → Domains** → add your domain and fol
 
 ### Pre-deploy checklist
 
-- [ ] Supabase project created and migrations run
-- [ ] Clerk app created and redirect URLs configured for your production domain
+- [ ] Supabase project created and migrations run (`supabase/migrations/001_tasks.sql`)
 - [ ] All `.env.example` values filled in
+- [ ] Supabase email confirmation redirect URL configured for your production domain
 
 ### Deploy
 
@@ -56,12 +56,27 @@ In Vercel dashboard → **Settings → Environment Variables**, add all values f
 ```
 NEXT_PUBLIC_SUPABASE_URL
 NEXT_PUBLIC_SUPABASE_ANON_KEY
+NEXT_PUBLIC_SITE_URL
+```
+
+Set `NEXT_PUBLIC_SITE_URL` to your production URL (e.g. `https://myapp.vercel.app`). This is used by Supabase to build the email confirmation redirect link.
+
+### Supabase: email confirmation redirect URL
+
+In Supabase → **Auth → URL Configuration**:
+- Set **Site URL** to your production domain
+- Add your production URL to **Redirect URLs** (e.g. `https://myapp.vercel.app/**`)
+
+---
+
+## `pro` — Vercel + Supabase + Clerk + Anthropic
+
+Same as `standard`, plus Clerk and Anthropic credentials:
+
+```
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
 CLERK_SECRET_KEY
-NEXT_PUBLIC_CLERK_SIGN_IN_URL
-NEXT_PUBLIC_CLERK_SIGN_UP_URL
-NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL
-NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL
+ANTHROPIC_API_KEY
 ```
 
 ### Update Clerk redirect URLs
@@ -69,21 +84,7 @@ NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL
 In the Clerk dashboard → **Redirect URLs**, add your production domain:
 - `https://yourdomain.com/sign-in`
 - `https://yourdomain.com/sign-up`
-- `https://yourdomain.com/tasks`
-
-### Supabase: allowed origins
-
-In Supabase → **Auth → URL Configuration**, add your production URL to **Allowed Redirect URLs**.
-
----
-
-## `pro` — Vercel + Supabase + Anthropic
-
-Same as `standard`, plus:
-
-```
-ANTHROPIC_API_KEY
-```
+- `https://yourdomain.com/welcome`
 
 > **Security:** `ANTHROPIC_API_KEY` must be a **server-side only** variable (no `NEXT_PUBLIC_` prefix). Never expose it to the browser.
 
