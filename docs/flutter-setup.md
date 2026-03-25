@@ -80,8 +80,17 @@ You don't need Android Studio to run on a simulator, but you do need it for Andr
 
 ### macOS Desktop (no phone or simulator needed)
 
-vibecoding-in-a-box scaffolds Flutter projects with macOS desktop support included. This is the fastest way to test on your Mac — no device, no simulator, no Xcode required.
+vibecoding-in-a-box scaffolds Flutter projects with macOS desktop support included. This is the fastest way to test on your Mac — no device or simulator required.
 
+**Prerequisite:** Xcode must be installed and its command line tools activated.
+
+```bash
+# Install Xcode from the App Store first, then:
+sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
+sudo xcodebuild -runFirstLaunch
+```
+
+Then run your app:
 ```bash
 flutter run -d macos
 ```
