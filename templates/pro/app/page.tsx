@@ -1,13 +1,19 @@
-import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { Box, CheckSquare, Database, Shield, Sparkles } from "lucide-react";
 
 export default async function Home() {
-  const { userId } = await auth();
+  const isConfigured = !!(
+    process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY &&
+    process.env.NEXT_PUBLIC_SUPABASE_URL
+  );
 
-  if (userId) {
-    redirect("/tasks");
+  if (!isConfigured) {
+    redirect("/configuration");
   }
+
+  const { auth } = await import("@clerk/nextjs/server");
+  const { userId } = await auth();
+  if (userId) redirect("/tasks");
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-900 via-violet-950 to-indigo-950 flex flex-col items-center justify-center p-8">

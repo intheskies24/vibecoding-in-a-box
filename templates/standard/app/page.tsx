@@ -1,25 +1,29 @@
-import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { Box, CheckSquare, Database, Shield } from "lucide-react";
 
 export default async function Home() {
-  const { userId } = await auth();
+  const isConfigured = !!(
+    process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY &&
+    process.env.NEXT_PUBLIC_SUPABASE_URL
+  );
 
-  if (userId) {
-    redirect("/tasks");
+  if (!isConfigured) {
+    redirect("/configuration");
   }
+
+  // Clerk is configured — check auth
+  const { auth } = await import("@clerk/nextjs/server");
+  const { userId } = await auth();
+  if (userId) redirect("/tasks");
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-950 flex flex-col items-center justify-center p-8">
       <div className="max-w-lg w-full text-center space-y-8">
-        {/* Logo */}
         <div className="flex justify-center">
           <div className="w-14 h-14 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-900/50">
             <Box size={28} className="text-white" />
           </div>
         </div>
-
-        {/* Heading */}
         <div className="space-y-3">
           <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/15 text-blue-400 border border-blue-500/20">
             standard template
@@ -29,8 +33,6 @@ export default async function Home() {
             Full-stack web app with auth, database, and real-time data.
           </p>
         </div>
-
-        {/* Feature pills */}
         <div className="flex flex-wrap justify-center gap-2">
           {[
             { icon: <Shield size={12} />, label: "Clerk Auth" },
@@ -46,8 +48,6 @@ export default async function Home() {
             </span>
           ))}
         </div>
-
-        {/* CTAs */}
         <div className="flex gap-3 justify-center">
           <a
             href="/sign-in"
@@ -62,7 +62,6 @@ export default async function Home() {
             Create Account
           </a>
         </div>
-
         <p className="text-xs text-slate-600">
           Built with vibecoding-in-a-box · Next.js + Supabase + Clerk
         </p>

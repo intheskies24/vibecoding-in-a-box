@@ -3,23 +3,46 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { UserButton } from "@clerk/nextjs";
+import dynamic from "next/dynamic";
 import {
   Home,
   CheckSquare,
   MessageSquare,
   Rocket,
   LayoutGrid,
+  Settings,
   ChevronDown,
   ChevronRight,
   Box,
 } from "lucide-react";
+
+const UserButton = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+  ? dynamic(() => import("@clerk/nextjs").then((m) => ({ default: m.UserButton })), { ssr: false })
+  : null;
 
 export function AppSidebar() {
   const pathname = usePathname();
   const [devToolsOpen, setDevToolsOpen] = useState(true);
 
   const isActive = (href: string) => pathname === href;
+
+  const navLink = (href: string, icon: React.ReactNode, label: string) => {
+    const active = isActive(href);
+    return (
+      <Link
+        key={href}
+        href={href}
+        className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+          active
+            ? "bg-violet-500/15 text-violet-400"
+            : "text-slate-400 hover:bg-white/5 hover:text-slate-200"
+        }`}
+      >
+        <span className={active ? "text-violet-400" : "text-slate-500"}>{icon}</span>
+        {label}
+      </Link>
+    );
+  };
 
   return (
     <aside className="w-64 bg-slate-950 border-r border-slate-800 flex flex-col flex-shrink-0 h-screen">
@@ -38,40 +61,11 @@ export function AppSidebar() {
 
       {/* Navigation */}
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-        <p className="px-3 pb-1 text-xs font-semibold text-slate-600 uppercase tracking-wider">Overview</p>
-        <Link
-          href="/tasks"
-          className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-            isActive("/tasks")
-              ? "bg-violet-500/15 text-violet-400"
-              : "text-slate-400 hover:bg-white/5 hover:text-slate-200"
-          }`}
-        >
-          <Home size={16} className={isActive("/tasks") ? "text-violet-400" : "text-slate-500"} />
-          Welcome
-        </Link>
-
-        <p className="px-3 pt-3 pb-1 text-xs font-semibold text-slate-600 uppercase tracking-wider">App</p>
-        {[
-          { href: "/tasks", icon: <CheckSquare size={16} />, label: "Tasks" },
-          { href: "/chat", icon: <MessageSquare size={16} />, label: "AI Chat" },
-        ].map((item) => {
-          const active = isActive(item.href);
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                active
-                  ? "bg-violet-500/15 text-violet-400"
-                  : "text-slate-400 hover:bg-white/5 hover:text-slate-200"
-              }`}
-            >
-              <span className={active ? "text-violet-400" : "text-slate-500"}>{item.icon}</span>
-              {item.label}
-            </Link>
-          );
-        })}
+        <p className="px-3 pb-1 text-xs font-semibold text-slate-600 uppercase tracking-wider">App</p>
+        {navLink("/tasks", <Home size={16} />, "Welcome")}
+        {navLink("/tasks", <CheckSquare size={16} />, "Tasks")}
+        {navLink("/chat", <MessageSquare size={16} />, "AI Chat")}
+        {navLink("/configuration", <Settings size={16} />, "Configuration")}
 
         <div className="pt-3">
           <button
@@ -83,26 +77,8 @@ export function AppSidebar() {
           </button>
           {devToolsOpen && (
             <div className="space-y-1 mt-1">
-              {[
-                { href: "/getting-started", icon: <Rocket size={16} />, label: "Getting Started" },
-                { href: "/components-demo", icon: <LayoutGrid size={16} />, label: "UI Components" },
-              ].map((item) => {
-                const active = isActive(item.href);
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={`flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                      active
-                        ? "bg-violet-500/15 text-violet-400"
-                        : "text-slate-400 hover:bg-white/5 hover:text-slate-200"
-                    }`}
-                  >
-                    <span className={active ? "text-violet-400" : "text-slate-500"}>{item.icon}</span>
-                    {item.label}
-                  </Link>
-                );
-              })}
+              {navLink("/getting-started", <Rocket size={16} />, "Getting Started")}
+              {navLink("/components-demo", <LayoutGrid size={16} />, "UI Components")}
             </div>
           )}
         </div>
@@ -110,8 +86,17 @@ export function AppSidebar() {
 
       {/* User */}
       <div className="px-4 py-3 border-t border-slate-800 flex items-center gap-3">
-        <UserButton afterSignOutUrl="/" />
-        <span className="text-xs text-slate-500 truncate">Account</span>
+        {UserButton ? (
+          <UserButton afterSignOutUrl="/" />
+        ) : (
+          <Link
+            href="/configuration"
+            className="flex items-center gap-2 text-xs text-amber-400 hover:text-amber-300 transition-colors"
+          >
+            <Settings size={13} />
+            Setup required
+          </Link>
+        )}
       </div>
     </aside>
   );
