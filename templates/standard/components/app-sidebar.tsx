@@ -24,6 +24,7 @@ export function AppSidebar() {
 
   useEffect(() => {
     const supabase = createClient();
+    if (!supabase) return;
     supabase.auth.getUser().then(({ data: { user } }) => {
       setUserEmail(user?.email ?? null);
     });
@@ -31,7 +32,7 @@ export function AppSidebar() {
 
   async function handleSignOut() {
     const supabase = createClient();
-    await supabase.auth.signOut();
+    if (supabase) await supabase.auth.signOut();
     router.push("/");
     router.refresh();
   }
