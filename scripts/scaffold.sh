@@ -88,8 +88,60 @@ if [[ "$CONFIG" == "mobile" || "$CONFIG" == "mobile-pro" ]]; then
   # Flutter projects: use `flutter create` to generate the native shell,
   # then overlay our template's lib/, pubspec.yaml, and other source files.
   if ! command -v flutter &>/dev/null; then
-    echo -e "${RED}Error: Flutter is not installed or not in PATH.${RESET}"
-    echo "Install Flutter: https://docs.flutter.dev/get-started/install"
+    echo -e "${YELLOW}⚠  Flutter is not installed or not in PATH.${RESET}"
+    echo ""
+    echo -e "${BOLD}Install Flutter first, then re-run this command.${RESET}"
+    echo ""
+
+    # Detect OS and give targeted instructions
+    OS="$(uname -s)"
+    if [[ "$OS" == "Darwin" ]]; then
+      echo -e "${CYAN}── macOS (recommended: Homebrew) ─────────────────────────────${RESET}"
+      echo ""
+      echo "  # Install Homebrew if you don't have it:"
+      echo "  /bin/bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\""
+      echo ""
+      echo "  # Install Flutter:"
+      echo "  brew install --cask flutter"
+      echo ""
+      echo "  # Verify install:"
+      echo "  flutter doctor"
+      echo ""
+      echo -e "${CYAN}── macOS (manual download) ───────────────────────────────────${RESET}"
+      echo ""
+      echo "  https://docs.flutter.dev/get-started/install/macos"
+      echo ""
+    elif [[ "$OS" == "Linux" ]]; then
+      echo -e "${CYAN}── Linux (snap) ──────────────────────────────────────────────${RESET}"
+      echo ""
+      echo "  sudo snap install flutter --classic"
+      echo "  flutter doctor"
+      echo ""
+      echo -e "${CYAN}── Linux (manual download) ───────────────────────────────────${RESET}"
+      echo ""
+      echo "  https://docs.flutter.dev/get-started/install/linux"
+      echo ""
+    else
+      echo -e "${CYAN}── Windows ───────────────────────────────────────────────────${RESET}"
+      echo ""
+      echo "  # Using winget:"
+      echo "  winget install -e --id Google.Flutter"
+      echo ""
+      echo "  # Or download the installer:"
+      echo "  https://docs.flutter.dev/get-started/install/windows"
+      echo ""
+    fi
+
+    echo -e "${CYAN}── After installing Flutter ──────────────────────────────────${RESET}"
+    echo ""
+    echo "  1. Run: flutter doctor"
+    echo "     Fix any critical issues shown (Xcode, Android Studio, licenses)."
+    echo ""
+    echo "  2. Re-run this command:"
+    echo "     ./scripts/scaffold.sh $CONFIG $PROJECT_NAME"
+    echo ""
+    echo -e "  ${CYAN}Full guide: docs/flutter-setup.md${RESET}"
+    echo ""
     exit 1
   fi
 
@@ -170,11 +222,9 @@ case "$CONFIG" in
     echo -e "  ${CYAN}To deploy: npx vercel${RESET}"
     ;;
   standard)
-    echo "  cp .env.example .env.local"
-    echo "  # Fill in your Supabase and Clerk credentials in .env.local"
+    echo "  npm install && npm run dev"
+    echo "  # Open http://localhost:3000/configuration to enter Supabase credentials"
     echo "  # Run supabase/migrations/001_tasks.sql in your Supabase SQL editor"
-    echo "  npm install"
-    echo "  npm run dev"
     echo ""
     echo -e "  ${CYAN}See README.md for the full setup guide.${RESET}"
     ;;

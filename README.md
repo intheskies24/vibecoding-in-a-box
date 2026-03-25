@@ -126,7 +126,8 @@ vibecoding-in-a-box/
 │
 └── docs/
     ├── stack-guide.md         # Why each technology was chosen
-    └── deployment.md          # Deployment guides per config
+    ├── deployment.md          # Deployment guides per config
+    └── flutter-setup.md       # Flutter install guide (iOS/Android/macOS/Linux/Windows)
 ```
 
 ---

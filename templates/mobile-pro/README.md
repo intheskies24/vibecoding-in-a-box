@@ -9,10 +9,32 @@ This template extends `mobile` with a Claude-powered chat screen. Claude is call
 
 ## Prerequisites
 
-- [Flutter SDK](https://docs.flutter.dev/get-started/install) installed
-- `flutter doctor` passes with no critical errors
-- A Supabase project
-- An Anthropic API key
+### Flutter (required before scaffolding)
+
+The scaffold script requires Flutter to be installed — it runs `flutter create` to generate the native iOS/Android project shell.
+
+**macOS (Homebrew — fastest):**
+```bash
+brew install --cask flutter
+flutter doctor
+```
+
+**Linux:**
+```bash
+sudo snap install flutter --classic
+```
+
+**Windows:**
+```powershell
+winget install -e --id Google.Flutter
+```
+
+> Run `flutter doctor` and fix any critical issues before scaffolding. Full install guide: `docs/flutter-setup.md` in the vibecoding-in-a-box repo.
+
+### Other prerequisites
+
+- A [Supabase](https://supabase.com) account (free)
+- An [Anthropic API key](https://console.anthropic.com/settings/keys)
 
 ---
 

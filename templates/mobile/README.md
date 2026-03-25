@@ -9,9 +9,33 @@ When you first run this template you'll see a welcome screen. Start building fro
 
 ## Prerequisites
 
-- [Flutter SDK](https://docs.flutter.dev/get-started/install) installed
-- `flutter doctor` passes with no critical errors
-- A Supabase project
+### Flutter (required before scaffolding)
+
+The scaffold script requires Flutter to be installed — it runs `flutter create` to generate the native iOS/Android project shell.
+
+**macOS (Homebrew — fastest):**
+```bash
+brew install --cask flutter
+flutter doctor
+```
+
+**Linux:**
+```bash
+sudo snap install flutter --classic
+flutter doctor
+```
+
+**Windows:**
+```powershell
+winget install -e --id Google.Flutter
+```
+
+> Run `flutter doctor` and fix any critical issues before scaffolding. Full install guide: `docs/flutter-setup.md` in the vibecoding-in-a-box repo.
+
+### Other prerequisites
+
+- A device/simulator ready to run (iOS Simulator, Android Emulator, or physical device)
+- A [Supabase](https://supabase.com) account (free)
 
 ---
 
@@ -19,18 +43,18 @@ When you first run this template you'll see a welcome screen. Start building fro
 
 ### 1. Scaffold the project (from vibecoding-in-a-box root)
 
-The scaffold script runs `flutter create` and overlays this template's source files:
-
 ```bash
 ./scripts/scaffold.sh mobile my-app
 cd my-app
 ```
 
+The scaffold script runs `flutter create` to generate the native project shell, then overlays the vibecoding-in-a-box Dart source files.
+
 ### 2. Set up Supabase
 
-1. Create a project at [supabase.com](https://supabase.com)
-2. Run `supabase/migrations/001_tasks.sql` in the Supabase SQL editor
-3. Copy your project URL and anon key
+1. Create a project at [supabase.com](https://supabase.com) (free tier)
+2. Go to **SQL Editor** and run `supabase/migrations/001_tasks.sql`
+3. Copy your **Project URL** and **Anon Key** from **Settings → API**
 
 ### 3. Configure environment
 
@@ -45,6 +69,8 @@ cp .env.example .env
 flutter pub get
 flutter run
 ```
+
+Select your simulator or device from the menu. The task manager app will launch.
 
 ---
 
@@ -114,11 +140,36 @@ RLS policies in `001_tasks.sql` already use `auth.uid()` to scope data per user.
 
 ---
 
+## Building Your Feature
+
+To replace the task manager with your own feature:
+
+1. **Database:** Add a new migration in `supabase/migrations/`
+2. **Model:** Add a Dart model class in `lib/models/`
+3. **Service:** Add a Supabase service in `lib/services/`
+4. **Screen:** Add screens in `lib/screens/`
+
+---
+
 ## Deploy
 
-- **iOS:** Build and submit via Xcode → App Store Connect
+- **iOS:** `flutter build ipa` → Xcode → App Store Connect
 - **Android:** `flutter build appbundle` → Google Play Console
-- **TestFlight / Internal Testing:** Distribute `.ipa` / `.aab` before full release
+- **TestFlight / Internal Testing:** Distribute `.ipa` / `.aab` before full review
+
+See `docs/deployment.md` for step-by-step build and submission instructions.
+
+---
+
+## Useful Commands
+
+| Command | What it does |
+|---------|-------------|
+| `flutter run` | Run on connected device/simulator |
+| `flutter pub get` | Install dependencies |
+| `flutter pub add <package>` | Add a dependency |
+| `flutter hot reload` | Press `r` while running |
+| `flutter doctor` | Check environment health |
 
 ---
 
