@@ -1,4 +1,4 @@
-import { Navbar } from "@/components/navbar";
+import { AppSidebar } from "@/components/app-sidebar";
 
 export default function DashboardLayout({
   children,
@@ -6,9 +6,9 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <main className="container mx-auto px-4 py-8 max-w-4xl">{children}</main>
+    <div className="flex h-screen overflow-hidden bg-gray-50">
+      <AppSidebar />
+      <main className="flex-1 overflow-y-auto">{children}</main>
     </div>
   );
 }

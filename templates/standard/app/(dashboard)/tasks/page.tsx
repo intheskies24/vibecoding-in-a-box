@@ -19,15 +19,17 @@ export default async function TasksPage() {
   }
 
   return (
-    <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Tasks</h1>
-        <p className="text-muted-foreground">Manage your tasks.</p>
+    <div className="min-h-screen bg-gray-50">
+      <div className="bg-gradient-to-br from-slate-800 to-slate-900 px-8 py-10">
+        <div className="max-w-3xl">
+          <h1 className="text-2xl font-bold text-white mb-1">Tasks</h1>
+          <p className="text-slate-400">Manage your tasks.</p>
+        </div>
       </div>
-
-      <TaskForm />
-
-      <TaskList tasks={(tasks as Task[]) ?? []} />
+      <div className="px-8 py-8 max-w-3xl space-y-6">
+        <TaskForm />
+        <TaskList tasks={(tasks as Task[]) ?? []} />
+      </div>
     </div>
   );
 }
