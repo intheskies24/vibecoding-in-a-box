@@ -172,6 +172,13 @@ if [[ "$CONFIG" == "mobile" || "$CONFIG" == "mobile-pro" ]]; then
     fi
   done
 
+  # Auto-create .env from .env.example so Flutter can bundle it as an asset.
+  # Without this file the build fails with "No file or variants found for asset: .env"
+  if [[ -f "$DEST/.env.example" && ! -f "$DEST/.env" ]]; then
+    cp "$DEST/.env.example" "$DEST/.env"
+    echo -e "  Created ${BOLD}.env${RESET} from .env.example — fill in your credentials before running."
+  fi
+
 else
   # Node/web projects: simple directory copy
   cp -r "$TEMPLATE_PATH" "$DEST"
@@ -237,12 +244,12 @@ case "$CONFIG" in
     echo -e "  ${CYAN}See README.md for the full setup guide.${RESET}"
     ;;
   mobile | mobile-pro)
-    echo "  cp .env.example .env"
-    echo "  # Fill in SUPABASE_URL and SUPABASE_ANON_KEY"
+    echo "  # 1. Fill in your credentials in .env (already created):"
+    echo "  #    SUPABASE_URL and SUPABASE_ANON_KEY"
     if [[ "$CONFIG" == "mobile-pro" ]]; then
-      echo "  # Also fill in ANTHROPIC_API_KEY"
+      echo "  #    Also ANTHROPIC_API_KEY"
     fi
-    echo "  # Run supabase/migrations/001_tasks.sql in your Supabase SQL editor"
+    echo "  # 2. Run supabase/migrations/001_tasks.sql in your Supabase SQL editor"
     echo "  flutter pub get"
     echo ""
     echo -e "  ${CYAN}Run on macOS desktop (no device needed):${RESET}"

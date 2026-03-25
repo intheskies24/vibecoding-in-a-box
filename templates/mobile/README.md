@@ -58,10 +58,14 @@ The scaffold script runs `flutter create` to generate the native project shell, 
 
 ### 3. Configure environment
 
-```bash
-cp .env.example .env
-# Fill in SUPABASE_URL and SUPABASE_ANON_KEY
+The scaffold script automatically creates `.env` from `.env.example`. Open it and fill in your Supabase credentials:
+
 ```
+SUPABASE_URL=https://your-project-id.supabase.co
+SUPABASE_ANON_KEY=eyJ...
+```
+
+> `.env` must exist before building — Flutter bundles it as an app asset. The scaffold creates it automatically so you never hit a build error before filling in credentials.
 
 ### 4. Install dependencies and run
 
