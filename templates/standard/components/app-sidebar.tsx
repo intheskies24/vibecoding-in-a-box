@@ -1,9 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import dynamic from "next/dynamic";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Home,
   CheckSquare,
@@ -13,16 +12,29 @@ import {
   ChevronDown,
   ChevronRight,
   Box,
+  LogOut,
 } from "lucide-react";
-
-// Only loaded when Clerk is actually configured — avoids crashing without ClerkProvider
-const UserButton = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
-  ? dynamic(() => import("@clerk/nextjs").then((m) => ({ default: m.UserButton })), { ssr: false })
-  : null;
+import { createClient } from "@/lib/supabase/client";
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const [devToolsOpen, setDevToolsOpen] = useState(true);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUserEmail(user?.email ?? null);
+    });
+  }, []);
+
+  async function handleSignOut() {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.push("/");
+    router.refresh();
+  }
 
   const isActive = (href: string) => pathname === href;
 
@@ -62,7 +74,7 @@ export function AppSidebar() {
       {/* Navigation */}
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
         <p className="px-3 pb-1 text-xs font-semibold text-slate-600 uppercase tracking-wider">App</p>
-        {navLink("/tasks", <Home size={16} />, "Welcome")}
+        {navLink("/welcome", <Home size={16} />, "Welcome")}
         {navLink("/tasks", <CheckSquare size={16} />, "Tasks")}
         {navLink("/configuration", <Settings size={16} />, "Configuration")}
 
@@ -84,9 +96,18 @@ export function AppSidebar() {
       </nav>
 
       {/* User */}
-      <div className="px-4 py-3 border-t border-slate-800 flex items-center gap-3">
-        {UserButton ? (
-          <UserButton afterSignOutUrl="/" />
+      <div className="px-4 py-3 border-t border-slate-800">
+        {userEmail ? (
+          <div className="space-y-2">
+            <p className="text-xs text-slate-500 truncate">{userEmail}</p>
+            <button
+              onClick={handleSignOut}
+              className="flex items-center gap-2 text-xs text-slate-400 hover:text-slate-200 transition-colors"
+            >
+              <LogOut size={13} />
+              Sign out
+            </button>
+          </div>
         ) : (
           <Link
             href="/configuration"

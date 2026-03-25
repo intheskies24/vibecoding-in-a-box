@@ -1,14 +1,14 @@
 import { CheckCircle2, AlertCircle } from "lucide-react";
 import { ConfigForm } from "./config-form";
 
-const MIGRATION_SQL = `-- Tasks table
+const MIGRATION_SQL = `-- Tasks table with Supabase Auth RLS
 -- Run this in your Supabase project: Dashboard → SQL Editor
 
 create type task_status as enum ('todo', 'in_progress', 'done');
 
 create table tasks (
   id          uuid primary key default gen_random_uuid(),
-  user_id     text not null,
+  user_id     uuid not null references auth.users(id) on delete cascade,
   title       text not null,
   description text,
   status      task_status not null default 'todo',
@@ -32,19 +32,19 @@ alter table tasks enable row level security;
 
 create policy "Users can view their own tasks"
   on tasks for select
-  using (user_id = current_setting('request.jwt.claims', true)::json->>'sub');
+  using (user_id = auth.uid());
 
 create policy "Users can insert their own tasks"
   on tasks for insert
-  with check (user_id = current_setting('request.jwt.claims', true)::json->>'sub');
+  with check (user_id = auth.uid());
 
 create policy "Users can update their own tasks"
   on tasks for update
-  using (user_id = current_setting('request.jwt.claims', true)::json->>'sub');
+  using (user_id = auth.uid());
 
 create policy "Users can delete their own tasks"
   on tasks for delete
-  using (user_id = current_setting('request.jwt.claims', true)::json->>'sub');
+  using (user_id = auth.uid());
 
 create index tasks_user_id_idx on tasks(user_id);
 create index tasks_created_at_idx on tasks(created_at desc);`;
@@ -74,12 +74,9 @@ function StatusOverview({ services }: { services: ServiceStatus[] }) {
 export default function ConfigurationPage() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
-  const clerkPublishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ?? "";
-  const clerkSecretKeySet = !!process.env.CLERK_SECRET_KEY;
 
   const services: ServiceStatus[] = [
     { label: "Supabase", ok: !!(supabaseUrl && supabaseAnonKey) },
-    { label: "Clerk", ok: !!(clerkPublishableKey && clerkSecretKeySet) },
   ];
 
   const allConfigured = services.every((s) => s.ok);
@@ -91,8 +88,10 @@ export default function ConfigurationPage() {
           <div>
             <h1 className="text-2xl font-bold text-white mb-1">Configuration</h1>
             <p className="text-slate-400">
-              Connect your services. Values are saved to{" "}
-              <code className="bg-slate-800 px-1.5 py-0.5 rounded text-slate-300 text-xs">.env.local</code>{" "}
+              Connect your Supabase project. Values are saved to{" "}
+              <code className="bg-slate-800 px-1.5 py-0.5 rounded text-slate-300 text-xs">
+                .env.local
+              </code>{" "}
               — restart the dev server after saving.
             </p>
           </div>
@@ -100,18 +99,17 @@ export default function ConfigurationPage() {
           {allConfigured && (
             <div className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 rounded-lg px-4 py-2.5 w-fit">
               <CheckCircle2 size={14} className="text-emerald-400" />
-              <span className="text-sm text-emerald-400 font-medium">All services connected — you&apos;re good to go!</span>
+              <span className="text-sm text-emerald-400 font-medium">
+                Supabase connected — you&apos;re good to go!
+              </span>
             </div>
           )}
         </div>
       </div>
-
       <div className="px-8 py-8 max-w-3xl">
         <ConfigForm
           supabaseUrl={supabaseUrl}
           supabaseAnonKey={supabaseAnonKey}
-          clerkPublishableKey={clerkPublishableKey}
-          clerkSecretKeySet={clerkSecretKeySet}
           migrationSql={MIGRATION_SQL}
         />
       </div>

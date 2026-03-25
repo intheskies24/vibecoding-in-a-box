@@ -19,8 +19,23 @@ const authMiddleware = clerkMiddleware(async (auth, request) => {
   }
 });
 
+const PROTECTED_PATHS = ["/tasks", "/chat", "/api/tasks", "/api/chat"];
+const ALLOWED_WITHOUT_CONFIG = [
+  "/",
+  "/sign-in",
+  "/sign-up",
+  "/configuration",
+  "/welcome",
+  "/getting-started",
+  "/components-demo",
+];
+
 function setupMiddleware(req: NextRequest) {
-  if (!req.nextUrl.pathname.startsWith("/configuration")) {
+  const { pathname } = req.nextUrl;
+  const isAllowed =
+    ALLOWED_WITHOUT_CONFIG.some((p) => pathname === p || pathname.startsWith(p + "/")) ||
+    PROTECTED_PATHS.every((p) => !pathname.startsWith(p));
+  if (!isAllowed) {
     return NextResponse.redirect(new URL("/configuration", req.url));
   }
   return NextResponse.next();

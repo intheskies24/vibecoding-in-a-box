@@ -1,11 +1,13 @@
-import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@/lib/supabase/server";
 
 export async function POST(request: NextRequest) {
-  const { userId } = await auth();
+  const supabase = await createServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  if (!userId) {
+  if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -15,11 +17,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Title is required" }, { status: 400 });
   }
 
-  const supabase = await createServerClient();
-
   const { data, error } = await supabase
     .from("tasks")
-    .insert({ title: title.trim(), description, user_id: userId })
+    .insert({ title: title.trim(), description, user_id: user.id })
     .select()
     .single();
 

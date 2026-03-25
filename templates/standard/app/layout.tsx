@@ -9,25 +9,11 @@ export const metadata: Metadata = {
   description: "Built with vibecoding-in-a-box",
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const isClerkConfigured = !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
-
-  if (isClerkConfigured) {
-    // Dynamically import ClerkProvider only when configured to avoid startup crash
-    const { ClerkProvider } = await import("@clerk/nextjs");
-    return (
-      <ClerkProvider>
-        <html lang="en">
-          <body className={inter.className}>{children}</body>
-        </html>
-      </ClerkProvider>
-    );
-  }
-
   return (
     <html lang="en">
       <body className={inter.className}>{children}</body>

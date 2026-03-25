@@ -13,7 +13,7 @@ export default async function Home() {
 
   const { auth } = await import("@clerk/nextjs/server");
   const { userId } = await auth();
-  if (userId) redirect("/tasks");
+  if (userId) redirect("/welcome");
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-900 via-violet-950 to-indigo-950 flex flex-col items-center justify-center p-8">

@@ -3,7 +3,6 @@
 import { useActionState, useState } from "react";
 import {
   Database,
-  Shield,
   Terminal,
   CheckCircle2,
   AlertCircle,
@@ -12,7 +11,7 @@ import {
   ExternalLink,
   RefreshCw,
 } from "lucide-react";
-import { saveSupabaseConfig, saveClerkConfig, type SaveResult } from "@/app/actions/save-config";
+import { saveSupabaseConfig, type SaveResult } from "@/app/actions/save-config";
 
 const RESTART_NOTICE = (
   <div className="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-lg p-4">
@@ -20,7 +19,8 @@ const RESTART_NOTICE = (
     <div>
       <p className="text-sm font-semibold text-amber-900">Restart required</p>
       <p className="text-sm text-amber-700 mt-0.5">
-        Changes saved to <code className="font-mono text-xs bg-amber-100 px-1 rounded">.env.local</code>.
+        Changes saved to{" "}
+        <code className="font-mono text-xs bg-amber-100 px-1 rounded">.env.local</code>.
         Stop and restart your dev server:{" "}
         <code className="font-mono text-xs bg-amber-100 px-1 rounded">npm run dev</code>
       </p>
@@ -58,8 +58,6 @@ function inputClass(value: string) {
   } px-3 py-2 text-sm font-mono placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all`;
 }
 
-// ── Supabase Section ────────────────────────────────────────────────────────
-
 function SupabaseSection({
   supabaseUrl,
   supabaseAnonKey,
@@ -82,7 +80,7 @@ function SupabaseSection({
           </div>
           <div>
             <h2 className="font-semibold text-gray-900 text-sm">Supabase</h2>
-            <p className="text-gray-500 text-xs">Database and real-time backend</p>
+            <p className="text-gray-500 text-xs">Database, auth, and real-time backend</p>
           </div>
         </div>
         <StatusBadge ok={isConfigured} />
@@ -92,13 +90,17 @@ function SupabaseSection({
           <ExternalLink size={12} className="mt-0.5 flex-shrink-0" />
           <span>
             Get these from{" "}
-            <a href="https://supabase.com/dashboard" target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline">
+            <a
+              href="https://supabase.com/dashboard"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-indigo-600 hover:underline"
+            >
               supabase.com
             </a>{" "}
             → your project → <strong>Project Settings → API</strong>
           </span>
         </div>
-
         <form action={action} className="space-y-3">
           <div className="space-y-1.5">
             <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
@@ -124,110 +126,16 @@ function SupabaseSection({
               className={inputClass(supabaseAnonKey)}
             />
           </div>
-          <div className="flex items-center justify-between pt-1">
-            <SaveButton pending={isPending} />
-            {state?.success && RESTART_NOTICE === RESTART_NOTICE && (
-              <span className="text-xs text-emerald-600 font-medium flex items-center gap-1">
-                <Check size={12} /> Saved
-              </span>
-            )}
-          </div>
+          <SaveButton pending={isPending} />
           {state && !state.success && (
             <p className="text-xs text-red-600">{state.error}</p>
           )}
         </form>
-
         {state?.success && <div className="pt-1">{RESTART_NOTICE}</div>}
       </div>
     </div>
   );
 }
-
-// ── Clerk Section ───────────────────────────────────────────────────────────
-
-function ClerkSection({
-  clerkPublishableKey,
-  clerkSecretKeySet,
-}: {
-  clerkPublishableKey: string;
-  clerkSecretKeySet: boolean;
-}) {
-  const [state, action, isPending] = useActionState<SaveResult | null, FormData>(
-    saveClerkConfig,
-    null
-  );
-  const isConfigured = !!(clerkPublishableKey && clerkSecretKeySet);
-
-  return (
-    <div className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
-      <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-indigo-50 flex items-center justify-center">
-            <Shield size={16} className="text-indigo-600" />
-          </div>
-          <div>
-            <h2 className="font-semibold text-gray-900 text-sm">Clerk</h2>
-            <p className="text-gray-500 text-xs">Authentication and user accounts</p>
-          </div>
-        </div>
-        <StatusBadge ok={isConfigured} />
-      </div>
-      <div className="px-6 py-5 space-y-4">
-        <div className="flex items-start gap-2 text-xs text-gray-500 bg-gray-50 rounded-lg p-3">
-          <ExternalLink size={12} className="mt-0.5 flex-shrink-0" />
-          <span>
-            Get these from{" "}
-            <a href="https://dashboard.clerk.com" target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline">
-              clerk.com
-            </a>{" "}
-            → your app → <strong>API Keys</strong>
-          </span>
-        </div>
-
-        <form action={action} className="space-y-3">
-          <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-              Publishable Key
-            </label>
-            <input
-              name="publishableKey"
-              type="text"
-              defaultValue={clerkPublishableKey}
-              placeholder="pk_test_..."
-              className={inputClass(clerkPublishableKey)}
-            />
-          </div>
-          <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
-              Secret Key
-            </label>
-            <input
-              name="secretKey"
-              type="password"
-              placeholder={clerkSecretKeySet ? "Already set — leave blank to keep" : "sk_test_..."}
-              className={inputClass(clerkSecretKeySet ? "set" : "")}
-            />
-            {clerkSecretKeySet && (
-              <p className="text-xs text-emerald-600 flex items-center gap-1">
-                <CheckCircle2 size={11} /> Secret key is configured
-              </p>
-            )}
-          </div>
-          <div className="flex items-center justify-between pt-1">
-            <SaveButton pending={isPending} />
-          </div>
-          {state && !state.success && (
-            <p className="text-xs text-red-600">{state.error}</p>
-          )}
-        </form>
-
-        {state?.success && <div className="pt-1">{RESTART_NOTICE}</div>}
-      </div>
-    </div>
-  );
-}
-
-// ── Database Migration Section ──────────────────────────────────────────────
 
 function DatabaseSection({ migrationSql }: { migrationSql: string }) {
   const [copied, setCopied] = useState(false);
@@ -256,14 +164,20 @@ function DatabaseSection({ migrationSql }: { migrationSql: string }) {
       </div>
       <div className="px-6 py-5 space-y-4">
         <p className="text-sm text-gray-600">
-          This creates the <code className="font-mono text-xs bg-gray-100 px-1 rounded">tasks</code> table
-          with Row Level Security policies. Run it once in your Supabase project&apos;s SQL Editor.
+          Creates the{" "}
+          <code className="font-mono text-xs bg-gray-100 px-1 rounded">tasks</code> table with Row
+          Level Security. Run once in your Supabase project&apos;s SQL Editor.
         </p>
         <div className="flex items-start gap-2 text-xs text-gray-500 bg-gray-50 rounded-lg p-3">
           <ExternalLink size={12} className="mt-0.5 flex-shrink-0" />
           <span>
             Open{" "}
-            <a href="https://supabase.com/dashboard/project/_/sql" target="_blank" rel="noopener noreferrer" className="text-indigo-600 hover:underline">
+            <a
+              href="https://supabase.com/dashboard/project/_/sql"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-indigo-600 hover:underline"
+            >
               Supabase Dashboard → SQL Editor
             </a>
             , paste the SQL below, and click Run.
@@ -286,25 +200,18 @@ function DatabaseSection({ migrationSql }: { migrationSql: string }) {
   );
 }
 
-// ── Main Export ─────────────────────────────────────────────────────────────
-
 export function ConfigForm({
   supabaseUrl,
   supabaseAnonKey,
-  clerkPublishableKey,
-  clerkSecretKeySet,
   migrationSql,
 }: {
   supabaseUrl: string;
   supabaseAnonKey: string;
-  clerkPublishableKey: string;
-  clerkSecretKeySet: boolean;
   migrationSql: string;
 }) {
   return (
     <div className="space-y-4">
       <SupabaseSection supabaseUrl={supabaseUrl} supabaseAnonKey={supabaseAnonKey} />
-      <ClerkSection clerkPublishableKey={clerkPublishableKey} clerkSecretKeySet={clerkSecretKeySet} />
       <DatabaseSection migrationSql={migrationSql} />
     </div>
   );

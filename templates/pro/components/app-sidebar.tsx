@@ -62,7 +62,7 @@ export function AppSidebar() {
       {/* Navigation */}
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
         <p className="px-3 pb-1 text-xs font-semibold text-slate-600 uppercase tracking-wider">App</p>
-        {navLink("/tasks", <Home size={16} />, "Welcome")}
+        {navLink("/welcome", <Home size={16} />, "Welcome")}
         {navLink("/tasks", <CheckSquare size={16} />, "Tasks")}
         {navLink("/chat", <MessageSquare size={16} />, "AI Chat")}
         {navLink("/configuration", <Settings size={16} />, "Configuration")}

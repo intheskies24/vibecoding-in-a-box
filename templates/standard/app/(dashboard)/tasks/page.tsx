@@ -1,17 +1,21 @@
-import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 import { createServerClient } from "@/lib/supabase/server";
 import { TaskList } from "@/components/task-list";
 import { TaskForm } from "@/components/task-form";
 import type { Task } from "@/lib/types";
 
 export default async function TasksPage() {
-  const { userId } = await auth();
   const supabase = await createServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) redirect("/sign-in");
 
   const { data: tasks, error } = await supabase
     .from("tasks")
     .select("*")
-    .eq("user_id", userId)
+    .eq("user_id", user.id)
     .order("created_at", { ascending: false });
 
   if (error) {

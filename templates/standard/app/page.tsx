@@ -3,18 +3,21 @@ import { Box, CheckSquare, Database, Shield } from "lucide-react";
 
 export default async function Home() {
   const isConfigured = !!(
-    process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY &&
-    process.env.NEXT_PUBLIC_SUPABASE_URL
+    process.env.NEXT_PUBLIC_SUPABASE_URL &&
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
   );
 
   if (!isConfigured) {
     redirect("/configuration");
   }
 
-  // Clerk is configured — check auth
-  const { auth } = await import("@clerk/nextjs/server");
-  const { userId } = await auth();
-  if (userId) redirect("/tasks");
+  const { createServerClient } = await import("@/lib/supabase/server");
+  const supabase = await createServerClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (user) redirect("/welcome");
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-950 to-indigo-950 flex flex-col items-center justify-center p-8">
@@ -35,8 +38,8 @@ export default async function Home() {
         </div>
         <div className="flex flex-wrap justify-center gap-2">
           {[
-            { icon: <Shield size={12} />, label: "Clerk Auth" },
-            { icon: <Database size={12} />, label: "Supabase" },
+            { icon: <Shield size={12} />, label: "Supabase Auth" },
+            { icon: <Database size={12} />, label: "Supabase DB" },
             { icon: <CheckSquare size={12} />, label: "Task Manager" },
           ].map(({ icon, label }) => (
             <span
@@ -63,7 +66,7 @@ export default async function Home() {
           </a>
         </div>
         <p className="text-xs text-slate-600">
-          Built with vibecoding-in-a-box · Next.js + Supabase + Clerk
+          Built with vibecoding-in-a-box · Next.js + Supabase
         </p>
       </div>
     </main>

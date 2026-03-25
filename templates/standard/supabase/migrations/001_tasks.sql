@@ -5,7 +5,7 @@ create type task_status as enum ('todo', 'in_progress', 'done');
 
 create table tasks (
   id          uuid primary key default gen_random_uuid(),
-  user_id     text not null,            -- Clerk user ID
+  user_id     uuid not null references auth.users(id) on delete cascade,
   title       text not null,
   description text,
   status      task_status not null default 'todo',
@@ -31,20 +31,19 @@ alter table tasks enable row level security;
 
 create policy "Users can view their own tasks"
   on tasks for select
-  using (user_id = current_setting('request.jwt.claims', true)::json->>'sub');
+  using (user_id = auth.uid());
 
 create policy "Users can insert their own tasks"
   on tasks for insert
-  with check (user_id = current_setting('request.jwt.claims', true)::json->>'sub');
+  with check (user_id = auth.uid());
 
 create policy "Users can update their own tasks"
   on tasks for update
-  using (user_id = current_setting('request.jwt.claims', true)::json->>'sub');
+  using (user_id = auth.uid());
 
 create policy "Users can delete their own tasks"
   on tasks for delete
-  using (user_id = current_setting('request.jwt.claims', true)::json->>'sub');
+  using (user_id = auth.uid());
 
--- Index for faster per-user queries
 create index tasks_user_id_idx on tasks(user_id);
 create index tasks_created_at_idx on tasks(created_at desc);

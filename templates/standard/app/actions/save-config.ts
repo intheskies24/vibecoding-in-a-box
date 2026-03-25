@@ -43,20 +43,3 @@ export async function saveSupabaseConfig(
     return { success: false, error: String(e) };
   }
 }
-
-export async function saveClerkConfig(
-  _prev: SaveResult | null,
-  formData: FormData
-): Promise<SaveResult> {
-  try {
-    const updates: Record<string, string> = {
-      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: (formData.get("publishableKey") as string) ?? "",
-    };
-    const secretKey = ((formData.get("secretKey") as string) ?? "").trim();
-    if (secretKey) updates.CLERK_SECRET_KEY = secretKey;
-    mergeAndWrite(updates);
-    return { success: true };
-  } catch (e) {
-    return { success: false, error: String(e) };
-  }
-}
