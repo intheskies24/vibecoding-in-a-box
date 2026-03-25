@@ -1,4 +1,4 @@
-import '../main.dart' show supabase;
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../models/task.dart';
 
 /// Supabase CRUD operations for tasks.
@@ -6,8 +6,10 @@ import '../models/task.dart';
 class TaskService {
   static const _table = 'tasks';
 
+  SupabaseClient get _client => Supabase.instance.client;
+
   Future<List<Task>> fetchTasks() async {
-    final data = await supabase
+    final data = await _client
         .from(_table)
         .select()
         .order('created_at', ascending: false);
@@ -16,7 +18,7 @@ class TaskService {
   }
 
   Future<Task> createTask(String title, {String? description}) async {
-    final data = await supabase
+    final data = await _client
         .from(_table)
         .insert({'title': title, 'description': description})
         .select()
@@ -26,10 +28,10 @@ class TaskService {
   }
 
   Future<void> updateTaskStatus(String id, String status) async {
-    await supabase.from(_table).update({'status': status}).eq('id', id);
+    await _client.from(_table).update({'status': status}).eq('id', id);
   }
 
   Future<void> deleteTask(String id) async {
-    await supabase.from(_table).delete().eq('id', id);
+    await _client.from(_table).delete().eq('id', id);
   }
 }

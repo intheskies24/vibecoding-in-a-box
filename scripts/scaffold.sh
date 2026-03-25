@@ -172,6 +172,15 @@ if [[ "$CONFIG" == "mobile" || "$CONFIG" == "mobile-pro" ]]; then
     fi
   done
 
+  # Override macOS window size to iPhone dimensions
+  if [[ -d "$TEMPLATE_PATH/macos/Runner" ]]; then
+    for swift_file in "$TEMPLATE_PATH/macos/Runner/"*.swift; do
+      if [[ -f "$swift_file" ]]; then
+        cp "$swift_file" "$DEST/macos/Runner/$(basename "$swift_file")"
+      fi
+    done
+  fi
+
   # Auto-create .env from .env.example so Flutter can bundle it as an asset.
   # Without this file the build fails with "No file or variants found for asset: .env"
   if [[ -f "$DEST/.env.example" && ! -f "$DEST/.env" ]]; then
